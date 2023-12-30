@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the GitHub repository
-                git 'https://github.com/12345/jenkins-nodejs.git'
+                git 'https://github.com/geloasacode/jenkins-nodejs.git'
             }
         }
 
