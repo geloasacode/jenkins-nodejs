@@ -5,7 +5,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the GitHub repository
-                git 'https://github.com/geloasacode/jenkins-nodejs.git'
+                git branch: 'main', 
+                url: 'https://github.com/geloasacode/jenkins-nodejs'
             }
         }
 
