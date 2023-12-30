@@ -11,13 +11,21 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build Docker image
-                    def dockerImageTag = "myJenkinsNodeApp:${env.BUILD_NUMBER}"
-                    docker.build(dockerImageTag, '.')
-                    }
-                }
-            }
+             steps{
+                script{
+                    sh '''
+                    echo 'Buid Docker Image'
+                    docker build -t myJenkinsNodeApp:${BUILD_NUMBER} .
+                    '''
+                 }
+             }
+            // steps {
+            //     script {
+            //         // Build Docker image
+            //         def dockerImageTag = "myJenkinsNodeApp:${env.BUILD_NUMBER}"
+            //         docker.build(dockerImageTag, '.')
+            //         }
+            //     }
+            // }
         }
     }
