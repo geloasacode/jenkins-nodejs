@@ -15,7 +15,7 @@ pipeline {
                 script{
                     sh '''
                     echo 'Buid Docker Image'
-                    docker build -t myJenkinsNodeApp:${BUILD_NUMBER} .
+                    docker build -t myjenkin-nodeapp:${BUILD_NUMBER} .
                     '''
                  }
              }
