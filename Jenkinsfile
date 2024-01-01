@@ -12,21 +12,29 @@ pipeline {
 
         stage('Build Docker Image') {
              steps{
-                script{
-                    sh '''
-                    echo 'Buid Docker Image'
-                    docker build -t myjenkin-nodeapp:${BUILD_NUMBER} .
-                    '''
-                 }
+                script {
+                    echo 'Build Docker Image'
+                    try {
+                        // Your build steps here
+                        sh 'docker build -t myjenkin-nodeapp:${BUILD_NUMBER} .'
+
+                        // Send email on success
+                        currentBuild.result = 'SUCCESS'
+                    } catch (Exception e) {
+                        // Handle failure if needed
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+                }
              }
-            // steps {
-            //     script {
-            //         // Build Docker image
-            //         def dockerImageTag = "myJenkinsNodeApp:${env.BUILD_NUMBER}"
-            //         docker.build(dockerImageTag, '.')
-            //         }
-            //     }
-            // }
+        }
+    }
+    post {
+        success {
+            emailext body: "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\n${BUILD_URL}",
+                      subject: "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}",
+                      to: 'gelodungo@gmail.com',
+                      attachLog: true
         }
     }
 }
