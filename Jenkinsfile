@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true)   
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -14,8 +18,8 @@ pipeline {
              steps{
                 script {
                     echo 'Building Docker Image...'
-                    def gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true)    
-                    sh 'docker build -t myjenkin-nodeapp:${gitSha} .'
+                    // def gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true)    
+                    sh "docker build -t myjenkin-nodeapp:${gitSha} ."
                 }
              }
         }
