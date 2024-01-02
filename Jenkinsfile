@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true)   
+        gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()  
     }
 
     stages {
