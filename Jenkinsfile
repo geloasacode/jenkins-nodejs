@@ -14,7 +14,7 @@ pipeline {
              steps{
                 script {
                     echo 'Building Docker Image...'
-                    def gitSha = sh ( script: 'git rev-parse --short HEAD', returnStdout: true)    
+                    def gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true)    
                     sh 'docker build -t myjenkin-nodeapp:${gitSha} .'
                 }
              }
