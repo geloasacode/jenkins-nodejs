@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+WORKDIR /usr/src/app/nodeapp
+
 EXPOSE 3333
 
 CMD ["npm", "run", "devstart"]
