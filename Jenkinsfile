@@ -13,28 +13,19 @@ pipeline {
         stage('Build Docker Image') {
              steps{
                 script {
-                    echo 'Build Docker Image'
-                    try {
-                        // Your build steps here
-                        sh 'docker build -t myjenkin-nodeapp:${BUILD_NUMBER} .'
-
-                        // Send email on success
-                        currentBuild.result = 'SUCCESS'
-                    } catch (Exception e) {
-                        // Handle failure if needed
-                        currentBuild.result = 'FAILURE'
-                        throw e
-                    }
+                    echo 'Building Docker Image...'
+                    def gitSha = sh ( script: 'git rev-parse --short HEAD', returnStdout: true)    
+                    sh 'docker build -t myjenkin-nodeapp:${gitSha} .'
                 }
              }
         }
     }
     post {
         success {
-            emailext body: "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\n${BUILD_URL}",
-                      subject: "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}",
-                      to: 'gelodungo@gmail.com',
-                      attachLog: true
+            echo "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${gitSha}\n${BUILD_URL}"
+        }
+        failure {
+            echo "Failure: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${gitCogitShammitSha}\n${BUILD_URL}"
         }
     }
 }
