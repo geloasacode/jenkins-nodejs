@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GITSHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        CREDENTIALS_DOCKER = credentials('dockerhub_id')
+        DOCKER_CREDENTIALS = credentials('dockerhub_id')
     }
 
     stages {
@@ -29,11 +29,7 @@ pipeline {
             steps{
                 script{
                     //Docker login
-                    echo 'Before withCredentials'
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub_id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
-                    }
-                    echo 'After withCredentials'
+                    sh "echo DOCKER_CREDENTIALS_PSW | docker login -u DOCKER_CREDENTIALS_USR --password-stdin"
                 }
             }
         }
