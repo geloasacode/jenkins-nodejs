@@ -29,9 +29,11 @@ pipeline {
             steps{
                 script{
                     //Docker login
+                    echo 'Before withCredentials'
                     withCredentials([usernamePassword(credentialsId: 'dockerhub_id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
                     }
+                    echo 'After withCredentials'
                 }
             }
         }
@@ -45,7 +47,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         success {
             echo "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${GITSHA}\n${BUILD_URL}"
