@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()  
+        GITSHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        CREDENTIALS_DOCKER = credentials('dockerhub_id')
     }
 
     stages {
@@ -19,14 +20,34 @@ pipeline {
                 script {
                     echo 'Building Docker Image...'
                     // def gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true)    
-                    sh "docker build -t myjenkins-nodeapp:${gitSha} ."
+                    sh "docker build -t myjenkins-nodeapp:${GITSHA} ."
                 }
              }
+        }
+
+        stage('Dockerhub login') {
+            steps{
+                script{
+                    echo 'Dockerhub login ...'
+
+                    //Docker login
+                    sh "echo $CREDENTIALS_DOCKER_PSW | docker login -u $CREDENTIALS_DOCKER_USR --password-stdin"
+                }
+            }
+        }
+
+        stage('Docker push') {
+            steps{
+                script{
+                    echo 'Pushing Image ...'
+                    sh "docker push gero001/myjenkins-nodeapp:${GITSHA}"
+                }
+            }
         }
     }
     post {
         success {
-            echo "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${gitSha}\n${BUILD_URL}"
+            echo "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${GITSHA}\n${BUILD_URL}"
         }
         failure {
             echo "Failure: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${gitCogitShammitSha}\n${BUILD_URL}"
