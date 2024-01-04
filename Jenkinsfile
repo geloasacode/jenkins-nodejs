@@ -47,13 +47,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        success {
-            echo "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${GITSHA}\n${BUILD_URL}"
-        }
-        failure {
-            echo "Failure: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${gitCogitShammitSha}\n${BUILD_URL}"
-        }
-    }
 }
