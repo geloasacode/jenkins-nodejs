@@ -28,14 +28,9 @@ pipeline {
         stage('Dockerhub login') {
             steps{
                 script{
-                    echo 'Dockerhub login ...'
-
                     //Docker login
-                    def dockerLoginCmd = "echo $CREDENTIALS_DOCKER_PSW | docker login -u $CREDENTIALS_DOCKER_USR --password-stdin"
-                    try {
-                        sh dockerLoginCmd
-                    } catch (Exception e) {
-                        error("Docker login failed: ${e.message}")
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub_id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
                     }
                 }
             }
@@ -50,6 +45,7 @@ pipeline {
             }
         }
     }
+    
     post {
         success {
             echo "Success: ${env.JOB_NAME} ${env.BUILD_NUMBER}\nCommit SHA: ${GITSHA}\n${BUILD_URL}"
