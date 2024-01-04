@@ -20,7 +20,7 @@ pipeline {
                 script {
                     echo 'Building Docker Image...'
                     // def gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true)    
-                    sh "docker build -t myjenkins-nodeapp:${GITSHA} ."
+                    sh "docker build -t gero001/myjenkins-nodeapp:${GITSHA} ."
                 }
              }
         }
