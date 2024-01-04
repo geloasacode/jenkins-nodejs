@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('SCM Checkout') {
             steps {
                 // Checkout the GitHub repository
                 git branch: 'main', 
@@ -31,7 +31,12 @@ pipeline {
                     echo 'Dockerhub login ...'
 
                     //Docker login
-                    sh "echo $CREDENTIALS_DOCKER_PSW | docker login -u $CREDENTIALS_DOCKER_USR --password-stdin"
+                    def dockerLoginCmd = "echo $CREDENTIALS_DOCKER_PSW | docker login -u $CREDENTIALS_DOCKER_USR --password-stdin"
+                    try {
+                        sh dockerLoginCmd
+                    } catch (Exception e) {
+                        error("Docker login failed: ${e.message}")
+                    }
                 }
             }
         }
